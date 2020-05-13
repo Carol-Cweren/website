@@ -20,7 +20,7 @@ theme = "hugo-sustain"
   custom_js  = []
 
 [params.social]
-  Github        = "CCweren100"
+  Github        = "Carol-Cweren"
   Email         = "ccweren@gmail.com"
  
 
