@@ -1,0 +1,149 @@
+---
+title: "Project 1"
+author: "Caroline Cweren"
+date: "3/1/2020"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, eval=TRUE, fig.align= "center", warning=F, message=F, tidy=TRUE, tidy.opts=list(width.cutoff=60),R.options=list(max.print=100))
+```
+
+```{r}
+#Data sets
+library(dplyr)
+library(ggplot2)
+Fertility1 <- read.csv("Fertility1 - Sheet1.csv")
+Fertility2 <- read.csv("Fertility2 - Sheet1.csv")
+
+Fertility1<-Fertility1%>%mutate(ID=1:333)
+glimpse(Fertility1)
+Fertility2<-Fertility2%>%mutate(ID=1:333)%>%select(-c(MaxE2))
+glimpse(Fertility2)
+
+```
+
+*Introduction: *
+For this project, I chose to combine two datasets pertaining to fertility in women by the variable, ID. I obtained both datasets from the available Rdatasets on https: //vincentarelbundock.github.io/Rdatasets/datasets.html. The first dataset I chose contained data on variables pertaining to ovarian follicles, such as age, smallest antral follicle count(LowAFC), average antral follicle count (Mean AFC), maximum follicle stimulating hormone level (FSH), and the maximum fertility level (E2). As a pre-med student particularly interested in becoming a pediatritian or OBG-YN, I thought it would provide me with useful knowledge and be really interesting to analyze the factors that contribute to a woman's fertility. For example, the antral follicle count is a very important measurement that counts the number of eggs containing follicles,fliud-filled sacs that contain immature eggs, developing in a woman's ovaries. FSH variable is important for stimulating the growth in follicles before an egg can be release during ovuilation. The second dataset contained data on maximum fertility level (MaxE2), maximum daily gonadtropin level (MaxDailyGn), total gonadotropin level (TotalGn), number of oocytes, and number of embryos. The variable of gonadtropin hormone level is necessary for the stimulation of the female gonads. The variable of number of oocytes, immature eggs, which are later fertilized to form an embryo. All of these variables play are dependent on one another and play a vital role in fertility. Based in this, I thought it would be interested to compare important variables, such as the correlation between FSH levels and the number of viable embryos, that effect fertility in women. I am expecting to see a positive correlation between the variables from the Fertility 1 dataset and the Fertility 2 dataset. 
+
+```{R}
+#Tidying
+library(tidyverse)
+Fertility_join<-Fertility1%>%full_join(Fertility2, by="ID")%>%glimpse()
+
+Mutatedata<- Fertility_join%>% mutate(Age_Group = case_when(Age>40 ~ "Forties",30<=Age & Age<=40 ~ "Thirties",Age<30 ~ "Twenties"))
+
+Tidydata<-Mutatedata%>% group_by(Age_Group) %>% summarize(mean_oocytes=mean(Oocytes), sd_FSH=sd(FSH), count=n(),se_FSH=sd_FSH/sqrt(count))
+
+untidyfert<-Tidydata%>% pivot_wider(names_from = "Age_Group", values_from = "mean_oocytes")
+untidyfert
+tidyfert <-untidyfert%>%pivot_longer(c("Forties","Thirties", "Twenties"), names_to="Age_Group", values_to="mean_Oocytes")%>%na.omit()
+tidyfert
+
+
+```
+Initially both of my datasets were tidy; however, to demonstrate my tidying skills I used pivot_wider to untidy my summary statistics of mean oocytes, the standard deviation of FSH, and the standard error of FSH. The summary statistics were taken from my joined dataset, and I converted the numeric "Age" variable to become a categorical "Age_Group" variable in order to group the data by the three age groups of women feritility, "twenties", "thirties","forties". Next, I used pivot_longer to tidy my dataset of the summary statistics. I named the newly tidy dataset "tidyfert".
+
+```{R}
+#Joining
+Fertility_join<-Fertility1%>%full_join(Fertility2, by="ID")%>%glimpse()
+
+
+```
+First, I had to match the sample number of each woman observed in each datasets by mutating a new column in both datasets labeled as "ID" for each observation. Next, I used the select function to delete an extraneous column of MaxE2 in the second dataset.These alterations are shown in the section of my importation of the datasets above. After cleaning the datasets, I decided to join the two fertility datasets by using full_join by "ID". By using full_join, I was able to retain all all rows and columns of both datasets. After joining, my new dataset contained all 11 unique variables. I thought that both datasets contained equally valuable data pertaining to different variables of fertility. For this reason, I did not use a right_join or left_join that would prioritize just one of the datasets. The completely newly joined dataset was named "Fertility_join".
+
+```{r}
+#Wrangling
+Fertility_join%>%filter(Age=="37")
+Fertility_join %>% select(MaxE2, Embryos)%>%glimpse()
+Fertility_join %>% arrange( desc(Age))%>%glimpse()
+Fertility_join %>% group_by(Age, Oocytes)%>%summarize(mean_emb=mean(Embryos))%>%glimpse()
+Fertility_join %>% mutate_if(is.numeric,round)%>%glimpse()
+Fertility_join %>% mutate(`Embryos_pctile` = ntile(Embryos,100))%>%glimpse()
+
+
+#summary statistics
+Fertility_join%>% summarize_all(mean)
+Fertility_join%>% summarize_all(sd)
+Fertility_join%>% summarize_all(var)
+                                  
+Mutatedata<- Fertility_join%>% mutate(Age_Group = case_when(Age>40 ~ "Forties",30<=Age & Age<=40 ~ "Thirties",Age<30 ~ "Twenties"))
+
+Mutatedata%>% group_by(Age_Group) %>% summarize(mean_oocytes=mean(Oocytes), sd_embryos=sd(Embryos), count=n(),se_Embryos=sd_embryos/sqrt(count),min_Embryos=min(Embryos), max_Embryos=max(Embryos))
+
+Mutatedata%>% group_by(Age_Group) %>% summarize(mean_MaxE2=mean(MaxE2), sd_MaxE2=sd(MaxE2), count=n(),se_MaxE2=sd_MaxE2/sqrt(count))
+
+Mutatedata%>% group_by(Age_Group) %>% summarize(mean_E2=mean(E2), sd_E2=sd(E2), count=n(),se_E2=sd_E2/sqrt(count))
+      
+Mutatedata%>% group_by(Age_Group) %>% summarize(mean_FSH=mean(FSH), sd_FSH=sd(FSH), count=n(),se_FSH=sd_FSH/sqrt(count))
+
+Mutatedata%>% group_by(Age_Group) %>% summarize(mean_meanAFC=mean(MeanAFC), sd_meanAFC=sd(MeanAFC), count=n(),se_meanAFC=sd_meanAFC/sqrt(count))
+
+Mutatedata%>% group_by(Age_Group) %>% summarize(mean_lowAFC=mean(LowAFC), sd_lowAFC=sd(LowAFC), count=n(),se_lowAFC=sd_lowAFC/sqrt(count))
+
+Mutatedata%>% group_by(Age_Group) %>% summarize(min_totalGn=min(TotalGn), max_totalGn=max(TotalGn))
+
+
+```
+  Within this section, I generated summary statistics. I first used the filter function to view the data of each variable for only individuals of 37 years of age. From this, I was able to see that there were a total of twenty observations from 37 year old women, and 9 out od 20 of those women had a maximum daily gonadtropin level of 255. The next dyplr function I used was the select function to choose data from only the "MaxE2"" and "Embryos" variables. I then used the arrange function to arrange the rows by descending age, starting with the eldest age of 46. After, I was curious to see what the mean number of embryos was based on age and the number of oocytes. In order to do this, I used the group_by function to group the data by the "Age" variable and the "Oocytes" variable and used the summarize function to calculate the mean number of embryos.From this data, I was able to see that the highest mean number of embryos of 18 occured in an individual of age 30 and who contained 27 oocytes. From this, I used the mutate function to generate the percentiles of the "Embryos" variable and determine that an embryo number value of 18 was in the 98th percentile. Additonally, I used the mutate_if function to round all decimal values within the dataset to the nearest whole number.
+  
+  Next, I used the summarize_all function to calculate the mean, standard deviation, and the variance of all numeric variables within my joined dataset. Looking at the "MeanAFC" variable, the mean is 13.52943, the standard deviation is 7.427507, and the varaiance is 55.16787. Additionally, from these statistics, it can be determined that the mean age is about 35.3 years and the deviation from that age value within the group is about 4.69 years difference. Since all my variables were numeric, I used the mutate function to convert my numeric "Age" variable into a categorical variable, called "Age_Group", which sorted the age of women into three categories: "twenties", "thirties", and "forties". Using my new mutated dataframe, I was able to group summary statistics by the "Age_Group" categorical variable. I conducted the the mean of "Oocytes", the standard deviation, the count, the standard error,the minimum, and maximum number of "Embryos" based on each "Age_Group". From this, I determined that the "Thirties" age group had the greatest mean oocytes of 12.34677 and greatest standard deviation of 4.229445 embryos, count of 248 embryos, and the maximum number of embryos of 23. The lowest mimimum number of embryos of 0 was also found in the "Thirties" age group. I continued to do the same summary analyzation of mean, standard deviation, and standard error for each of my other numeric variables. In almost all summary statistics analyzed by age group, the "Thirties" age group had the highest mean values for all numeric variables, except FSH. The highest mean FSH value of 6.848 was found in the "Forties" group. I also computed the maximum and mimum total gonadtropin levels in each "Age_Group" category. The "Thirties" age group had the highest maximum total gonadtrpin level of 7275 and the "Twenties" age group had the lowest minimum total gonadtropin level of 825. 
+
+
+```{r}
+#Visualizing
+Fertility_join %>% select_if(is.numeric) %>% cor %>% as.data.frame %>% rownames_to_column %>% pivot_longer(-1) %>% ggplot(aes(rowname, name, fill=value)) + ggtitle("Correlation Map of Fertility Variables") + geom_tile() + geom_text(aes(label=round(value, 2))) + xlab("") + ylab("") + scale_fill_gradient2(low="red", high="blue")+theme(axis.text.x = element_text(angle=45, hjust=1))
+
+ 
+  ggplot(data=Mutatedata, aes(x=Oocytes, y=MaxE2, color=Age_Group),stat = "summary", fun.y="mean")+ scale_y_continuous(breaks=seq(0,7000,500))+geom_point()+ggtitle("Average Maximum Feritlity Level Based on Oocytes and Age") + ylab("Mean Maximum Fertility Level")+ xlab("Number of Oocytes")
+ 
+ggplot(Mutatedata, aes(Oocytes,Embryos))+
+geom_point(size=2,aes(color=log10(MaxE2)))+
+scale_color_gradient(low="yellow", high="red")+ggtitle("Number of Embryos According to Embryo Number and Fertility Level") + xlab("Number of Oocytes") + ylab("Number of Embryos")
+ 
+ggplot(Mutatedata, aes(x = Age_Group, y= MaxE2))+ geom_bar(aes(y=MaxE2, fill= Age_Group),stat = "summary", fun.y="mean")+ scale_y_continuous(breaks=seq(0,1800, 200), name="Maximum Fertility Level")+scale_fill_brewer()+ xlab("Age (years)")+ ggtitle("Max Fertility Level based on Age Group")+geom_errorbar(stat="summary",fun.data='mean_se', width=.5)
+
+
+```
+  The first plot shows the correlation heatmap of all the numeric variables in the dataset. In the correlation Map, it appears that the two numeric variables with the stongest correlation of 0.95 is betweenMeanAFC and LowAFC. It is also shown that the "ID" variable and "MeanAFC" have the weakest correlation of -0.9. A correlation trend I found interesting was the low correlation of -0.43 between "MaxDailyGn" and "LowAFC". This means that the maximum amount of gonadtropin, which stimulates the activity of the ovaries, does not really effect the smallest antral follicle count. Addtionally, the number oocytes and embryos is highly correlated. This makes sense because oocytes, if fertilized and viable, will become embryos. 
+  The second graph represents the average maximum fertility level(MaxE2) by the number of oocytes and what age group determines this value. It appear that as the number of oocytes increases, the mean maximum fertility level increases slightly, suggesting a slight positive correlation between these two variables.The color of the points describes which age group, whether in the twenties, thirties, or forties, for these points. From observing the graph, much of the higher higher points for mean maximum fertility are in the green color, indicating that the thirties age group has some of the highest mean maximum fertility levels. Additionally, most of the red dots are located towards the bottom left of the graph, indicating that many women in their forties have lower numbers of oocytes and lower mean maximum fertility levels. Overall, there are more green dots than than blue or red, revealing that most fertility observations occurred in women in their thirties. I made this graph by using ggplot and geom_point. I changed the tick-marks along the y-axis for the graph, and used "stat=summary" to give only the mean values of maximum fertility levels.
+  
+  The third graph describes the relationship between the number of oocytes and the number of embryos, along with the log of the maximum fertility level(MaxE2) value. It appears that there is a strong correlation between the number of oocytes and embryos. In the graph, as the number of oocytes increases, the value of embryos also increases. In addition, the color of the points indicates the logarithmic value of MaxE2. It appears that the more yellow points, indicating lower log(MaxE2), are located in the bottom left corner of the graph. This represents that lower numbers of oocytes and lower number of embryos indicate lower maximum fertility levels. The red and orange points are located mostly to the right of graph, where there are either high numbers of oocytes or embryos. I made this graph using ggplot and geom_point. I also changed the size and the color of the points based on log(MaxE2).
+  
+ Lastly, I provided a visualization of mean maximum fertility levels based on the three different age groups by using ggplot and geom_bar. From this, I was able to visualize, as indicated from my summary statistics, that the twenties age group had the highest mean maximum fertility level. Additionally, I was able to view the mean standard error of each age group by using geom_errorbar, revealing that the thirties age group had the lowest standard error. I changed the tick-marks along the y-axis for the graph, and used "stat=summary" to give only the mean values of maximum fertility levels, and altered the width of the standard error bar.
+  
+```{r}
+#Dimentionality Reduction
+library(cluster)
+kmeandata<-Fertility_join%>%select(-LowAFC, -MeanAFC, -E2, -ID,-MaxE2,-MaxDailyGn, -TotalGn)
+#Embryos and FSH levels
+wss<-vector()
+for(i in 1:10){
+tempfit <- Fertility_join%>%select(-LowAFC, -MeanAFC, -E2, -ID,-MaxE2,-MaxDailyGn, -TotalGn)%>%kmeans(.,i)
+wss[i] <- tempfit$tot.withinss%>%glimpse()
+}
+
+ggplot()+geom_line(aes(x=1:10,y=wss))+xlab("cluster")+scale_x_continuous(breaks=1:10)
+
+kmeans1<-kmeandata%>%scale%>%kmeans(2)%>%glimpse()
+kmeans1
+
+kmeansclust<-kmeandata%>%mutate(cluster=as.factor(kmeans1$cluster))%>%glimpse
+kmeansclust%>%ggplot(aes(FSH, Embryos, color=cluster))+geom_point()
+
+fertility_clus<-Mutatedata%>%mutate(cluster=as.factor(kmeans1$cluster))
+format<-fertility_clus%>%group_by(Age_Group)%>%count(cluster)%>%arrange(desc(n))%>%
+pivot_wider(names_from="cluster",values_from="n",values_fill = list('n'=0))
+format
+
+library(GGally)
+ggpairs(fertility_clus, columns=1:4, aes(color=Age_Group))
+
+
+
+```
+
+For my data, I performed a k-means cluster for five numeric variables, FSH levels, number of Embryos, number of oocytes, and Age. First, I made a new dataset, named "kmeandata" to include only these 5 variables. Next, I determined the number of clusters by making a plot of clusters vs. wss. I chose to do 2 clusters based on the elbow shown in the grapoh generated. At cluster number 2, the graph started to decrease gradually. I then used ggplot to create a plot by using k-means cluster. Within the plot, I am able to see two distinct groups. From this, I am able to observe that generally women with higher numbers of embryos had lower FSH levels. Additinally I was able to visualize all pairwise combinations of the variables:age, lowAFC, MeanAFC, and FSH by using ggpairs function to create a scatterplot matrix. From this, I am able to determine the correlation between each of the 4 variables, revealing that MeanAFC and LowAFC have the highest correlation among the variables analyzed. LowAFC and FSH have the lowest correlation.The variable distribution based on 3 distinct age groups can be visualized along the diagonal. It is shown that the twenties age group has a wider distribution of LowAFC and MeanAFC.The forties age group seems to have high density for lower levels of LowAFC and MeanAFC.However in the twenties age group, there is high density for lower levels of FSH.
+```{R}
