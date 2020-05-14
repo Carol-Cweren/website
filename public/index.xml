@@ -70,7 +70,7 @@ Follow the following steps:
     <item>
       <title>Project 1</title>
       <link>/project1/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <pubDate>Tues, 12 May 2020 00:00:00 +0000</pubDate>
       
       <guid>/project1/</guid>
       <description>#Data sets library(dplyr) library(ggplot2) Fertility1 &amp;lt;- read.csv(&amp;quot;Fertility1 - Sheet1.csv&amp;quot;) Fertility2 &amp;lt;- read.csv(&amp;quot;Fertility2 - Sheet1.csv&amp;quot;) Fertility1&amp;lt;-Fertility1%&amp;gt;%mutate(ID=1:333) glimpse(Fertility1) ## Observations: 333 ## Variables: 7 ## $ Age &amp;lt;int&amp;gt; 40, 37, 40, 40, 30, 29, 31, 33, 36, 35, 25, 39, 35, 30, 37, 3… ## $ LowAFC &amp;lt;int&amp;gt; 40, 41, 38, 36, 36, 35, 24, 28, 30, 32, 27, 32, 31, 18, 29, 2… ## $ MeanAFC &amp;lt;dbl&amp;gt; 51.5, 41.0, 41.0, 37.</description>
@@ -79,7 +79,7 @@ Follow the following steps:
     <item>
       <title>Project 2: Modeling, Testing, and Predicting</title>
       <link>/project2/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <pubDate>Tues, 12 May 2020 00:00:00 +0000</pubDate>
       
       <guid>/project2/</guid>
       <description>#Caroline Cweren, cc63235
@@ -89,7 +89,7 @@ Modeling Instructions A knitted R Markdown document (as a PDF) and the raw R Mar
     <item>
       <title>Projects</title>
       <link>/projects/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <pubDate>Tues, 12 May 2020 00:00:00 +0000</pubDate>
       
       <guid>/projects/</guid>
       <description>Projects Here are some projects I have recently completed:
