@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="author" content="Caroline Cweren" />
+    <meta name="description" content="Describe your website">
+    <link rel="shortcut icon" type="image/x-icon" href="/img/favicon.ico">
+    <title>Python in R</title>
+    <meta name="generator" content="Hugo 0.70.0" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="/css/main.css" />
+    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:200,400,200bold,400old" />
+    
+    <!--[if lt IE 9]>
+			<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+			<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+		<![endif]-->
+
+    
+  </head>
+
+  <body>
+    <div id="wrap">
+
+      
+      <nav class="navbar navbar-default">
+  <div class="container">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="/"><i class="fa fa-home"></i></a>
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <div class="navbar-collapse collapse" id="navbar">
+      <ul class="nav navbar-nav navbar-right">
+      
+        
+        <li><a href="/blog/">BLOG</a></li>
+        
+        <li><a href="/projects/">PROJECTS</a></li>
+        
+        <li><a href="resume.pdf">RESUME</a></li>
+        
+      
+      </ul>
+    </div>
+  </div>
+</nav>
+
+      
+      <div class="container">
+        <div class="blog-post">
+          <h3>
+            <strong><a href="/blog/python-in-r/">Python in R</a></strong>
+          </h3>
+        </div>
+        <div class="blog-title">
+          <h4>
+          May 13, 2020
+            &nbsp;&nbsp;
+            
+          </h4>
+        </div>
+        <div class="panel panel-default">
+          <div class="panel-body">
+            <div class="blogpost">
+              
+
+
+<p><img src="/blog/2020-05-13-python-in-r_files/tower.JPG" />
+Hey there everyone! Welcome to my first blog post ever about cool coding techniques I learned this semester at The University of Texas!</p>
+<p>In my SDS 348 class, we have learned how to interact two programming languages, R code and Python. In this blog, I will be disussing some basic steps on how both these two programming worlds can colide and work together!</p>
+<pre class="r"><code>library(reticulate)
+
+UT&lt;-&quot;Hook&#39;em&quot;</code></pre>
+<pre class="python"><code>#Python code
+UT=&quot;horns forever!&quot;
+print(r.UT,UT)</code></pre>
+<pre><code>## Hook&#39;em horns forever!</code></pre>
+<p>I am a graduating senior this semester, so I am just beaming with pride for my school during this time of the year. My apologies if you go to Texas A&amp;M or don’t like the color burnt orange! I first begin with an R chunk, and then I created a python chunk. By using the “print()” function, I was able to access the R defined code,named “UT”, to join both the R and Python chunks to complete my phrase “Hook’em horns forever!”. Pretty neat! Basically, you can now speak in two (programming) languages now!</p>
+<p>Another cool feature in Python, is that you can use “re.match()” to return any part of a string that matches. In my example, I created a string, “My string is”Bevo is the coolest mascot!&quot; and found the match of the string between “bevo” and “the”. Notice that you must prefix the original expression with an “r”.</p>
+<pre class="python"><code>import re
+string=&quot;Bevo is the coolest mascot!&quot;
+match=re.match(r&quot;Bevo.*the&quot;,string)
+match.group()</code></pre>
+<pre><code>## &#39;Bevo is the&#39;</code></pre>
+<p>Now let’s say you want to change the phrases in the original string. You can also substitute matches in a string with replacement by using the “re.sub()” function.</p>
+<pre class="python"><code>string=&quot;Bevo is the coolest mascot!&quot;
+re.sub(r&quot;coolest.* mascot&quot;,&quot;burnt orange cow&quot;,string)</code></pre>
+<pre><code>## &#39;Bevo is the burnt orange cow!&#39;</code></pre>
+<p>Notice how I indicated what part of the string I wanted to change, beginning at “coolest” and ending at “mascot”, and replaced it with “burnt orange cow”.</p>
+<p>Lastly, I want to show you how to find the number of times a certain instance occurs within a given string. The example below demonstrates how many times the word “bevo” occurs followed by anythin in the string.</p>
+<pre class="python"><code>x= &quot;bevo bevomoos burntorangebevo bevomybevo hornsonbevo bestmascotbevoUT whereisbevo&quot;
+re.findall(r&quot;bevo&quot;,x)</code></pre>
+<pre><code>## [&#39;bevo&#39;, &#39;bevo&#39;, &#39;bevo&#39;, &#39;bevo&#39;, &#39;bevo&#39;, &#39;bevo&#39;, &#39;bevo&#39;, &#39;bevo&#39;]</code></pre>
+<p>By using “re.findall()”, I am able to see that there are a total of 8 matches of “bevo” in the string called “x”. Again, remember to prefix the expression with an “r”.</p>
+<p>I will show another example of this same technique to find how many times the letter “b” is followed by the letter “v”.</p>
+<pre class="python"><code>x= &quot;bevo bevomoos burntorangebevo bevomybevo hornsonbevo bestmascotbevoUT whereisbevo&quot;
+re.findall(r&quot;b.v&quot;,x)</code></pre>
+<pre><code>## [&#39;bev&#39;, &#39;bev&#39;, &#39;bev&#39;, &#39;bev&#39;, &#39;bev&#39;, &#39;bev&#39;, &#39;bev&#39;, &#39;bev&#39;]</code></pre>
+<p>It appears a total of 8 times!</p>
+<p>All in all, there are many more ways on how to interact R code and Python, but I hope you found this blog post useful and gained some new insight on how to interact programming languages.
+```</p>
+
+              <hr>
+              <div class="related-posts">
+                <h5>Related Posts</h5>
+                
+              </div>
+            </div>
+          </div>
+          <hr>
+        <div class="disqus">
+  <div id="disqus_thread"></div>
+  <script type="text/javascript">
+
+    (function() {
+      
+      
+      if (window.location.hostname == "localhost")
+        return;
+
+      var disqus_shortname = '';
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  <a href="http://disqus.com/" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+        </div>
+      </div>
+      
+    </div>
+
+    
+    <footer>
+  <div id="footer">
+    <div class="container">
+      <p class="text-muted">&copy; All rights reserved. Powered by <a href="https://gohugo.io/">Hugo</a> and
+      <a href="http://www.github.com/nurlansu/hugo-sustain/">sustain</a> with ♥</p>
+    </div>
+  </div>
+</footer>
+<div class="footer"></div>
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="/js/docs.min.js"></script>
+<script src="/js/main.js"></script>
+
+<script src="/js/ie10-viewport-bug-workaround.js"></script>
+
+
+    
+  </body>
+</html>
