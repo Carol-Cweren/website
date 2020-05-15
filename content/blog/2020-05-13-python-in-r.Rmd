@@ -9,23 +9,23 @@ description: ' '
 ---
 
 ![](/blog/2020-05-13-python-in-r_files/tower.JPG)
+Hey there everyone! Welcome to my first blog post ever about cool coding techniques I learned this semester at The University of Texas!
 
-Hey there everyone! Welcome to my first blog post ever about cool coding techniques I learned this semester!
+In my SDS 348 class, we have learned how to interact two programming languages, R code and Python. In this blog, I will be disussing some basic steps on how both these two programming worlds can colide and work together!
 
-In my SDS 348 class at the Univeristy of Texas, we have learned how to interact two programming languages, R code and Python. In this blog, I will be disussing some basic steps on how both these two programming worlds can colide and work together.
 
 ```{r}
-install.packages("reticulate")
+library(reticulate)
 
 UT<-"Hook'em"
 ```
 
 ```{python}
 #Python code
-UT="horns forever"
+UT="horns forever!"
 print(r.UT,UT)
 ```
-I am a graduating senior this semester, so I  am just beaming with pride for my school during this time of the year. My apologies if you go to Texas A&M or don't like the color burnt orange! I first begin with an R chunk, and then I created a python chunk. By using the "print()" function, I was able to access the R defined code,named "UT", to join both the R and Python chunks to complete my phrase "Hook'em horns forever". Pretty neat! Basically, you can now speak in two (programming) languages now!
+I am a graduating senior this semester, so I  am just beaming with pride for my school during this time of the year. My apologies if you go to Texas A&M or don't like the color burnt orange! I first begin with an R chunk, and then I created a python chunk. By using the "print()" function, I was able to access the R defined code,named "UT", to join both the R and Python chunks to complete my phrase "Hook'em horns forever!". Pretty neat! Basically, you can now speak in two (programming) languages now!
 
 
 Another cool feature in Python, is that you can use "re.match()" to return any part of a string that matches. In my example, I created a string, "My string is "Bevo is the coolest mascot!" and found the match of the string between "bevo" and "the". Notice that you must prefix the original expression with an "r". 
